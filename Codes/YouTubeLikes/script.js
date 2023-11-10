@@ -7,12 +7,7 @@ const apiKey = 'AIzaSyBBIlYm-xe5U0qYxlDXt-UHhQ1YzAdnXZk'; // Replace with your a
 var likesCount;
 var targetCount = 4;
 
-var xValues = ["Likes","Target"];
-var yValues = [likesCount,targetCount];
-var barColors = [
-  "#b91d47",
-  "#00aba9"
-];
+
 
     function init() {
         gapi.load('client', function () {
@@ -68,23 +63,7 @@ var barColors = [
         // Call your function here that you want to run every 2 minutes
         console.log('Timer tick!');
         init(); 
-        Chart("myChart", {
-            type: "doughnut",
-            data: {
-              labels: xValues,
-              datasets: [{
-                backgroundColor: barColors,
-                data: yValues
-              }]
-            },
-            options: {
-              title: {
-                display: true,
-                text: "World Wide Wine Production 2018"
-              }
-            }
-          });
-
+        
           
         
     }
