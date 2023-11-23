@@ -74,9 +74,10 @@ MFRC522 mfrc522{ driver };  // Create MFRC522 instance.
 
 //String IP = "192.168.1.6:5000"; //home
 //String IP = "192.168.29.229:5000"; //CDAC
-String IP = "192.168.69.245:5000";  //Abhishek Mob.
+//String IP = "192.168.69.245:5000";  //Abhishek Mob.
+String IP = "192.168.48.245:5000";  //Abhishek Mob. 2
 String Mode = "senData";
-String nodeId = "o102";
+String nodeId = "o101";
 
 void setup() {
 
@@ -99,6 +100,10 @@ void setup() {
   USE_SERIAL.println();
   USE_SERIAL.println();
   USE_SERIAL.println();
+  s1.write(0);
+  s2.write(0);
+  digitalWrite(dOut1,LOW);
+  digitalWrite(dOut2,LOW);
 
   for (uint8_t t = 4; t > 0; t--) {
     USE_SERIAL.printf("[SETUP] WAIT %d...\n", t);
@@ -206,13 +211,26 @@ void DigitalActuation(int pin, String state) {
   digitalWrite(pin, state.toInt());
 }
 
-void ServoControl(String pin, String angle) {
+void ServoControl(String pin, String key) {
 
   if (pin == "Servo 1") {
-    s1.write(angle.toInt());
-    Serial.println(angle.toInt());
+    if(key=="Done"){
+    
+    //s1.write(angle.toInt());
+    for(uint8_t n=0;n<3;n++) {
+    digitalWrite(dOut1,HIGH);
+    delay(2000);
+    digitalWrite(dOut1,LOW);
+    delay(2000);
+    }
+    s1.write(90);
+    delay(6000);
+    s1.write(0);
+    Serial.println(key);
+    }
+    else{s1.write(0);}
   } else if (pin == "Servo 2") {
-    s2.write(angle.toInt());
+    s2.write(key.toInt());
   }
 }
 
