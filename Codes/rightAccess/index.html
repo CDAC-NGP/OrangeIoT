@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <title>User Details</title>
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title text-center">User Details</h3>
+                </div>
+                <div class="card-body text-center">
+                    <img id="userPhoto" src="" alt="User Photo" class="img-fluid rounded-circle mb-3" style="width: 150px;">
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <p id="userName" class="form-control-static"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Address:</label>
+                        <p id="userAddress" class="form-control-static"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone:</label>
+                        <p id="userPhone" class="form-control-static"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email ID:</label>
+                        <p id="userEmail" class="form-control-static"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h3 class="card-title text-center">Educational Qualifications</h3>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="qualifications">Qualifications:</label>
+                        <p id="userQualifications" class="form-control-static"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject1">Subject 1 Score:</label>
+                        <p id="userSubject1" class="form-control-static"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject2">Subject 2 Score:</label>
+                        <p id="userSubject2" class="form-control-static"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject3">Subject 3 Score:</label>
+                        <p id="userSubject3" class="form-control-static"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject4">Subject 4 Score:</label>
+                        <p id="userSubject4" class="form-control-static"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject5">Subject 5 Score:</label>
+                        <p id="userSubject5" class="form-control-static"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div class="row mt-4">
+        <div class="col-md-6 mx-auto">
+            <label for="userSelect" class="form-label">Select a user:</label>
+            <select id="userSelect" class="form-select" onchange="showUserDetails()">
+                <option value="-1" selected disabled>Select a user</option>
+                <option value="0">John Doe</option>
+                <option value="1">Jane Smith</option>
+                
+            </select>
+        </div>
+    </div> -->
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<script>
+    let refRFIDTable = { 
+        "a39a78f": 6, 
+        "33e7b315": 5, 
+        "62fc8f51": 3  //62fc8f51
+    };
+    
+    function fetchData() {
+        const jsonFileURL = 'https://angolepython.pythonanywhere.com/actData?id=o101&s1=150&s2=132&do1=1&do2=1';
+    
+        return fetch(jsonFileURL)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                console.log("Data received");
+                return response.json();
+            })
+            .then(data => {
+                const variable1 = data.allData.RFID;
+                return variable1;
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+                throw error; // Re-throw the error to propagate it
+            });
+    }
+    
+    // Usage example
+    
+    let userID;
+    
+    fetchData()
+        .then(variable1 => {
+            userID = refRFIDTable[variable1];
+            console.log('Value from refRFIDTable:', userID);
+            
+            // Show user details after fetching data
+            showUserDetails();
+        })
+        .catch(error => {
+            // Handle errors here
+            console.error('Error in fetchData:', error);
+        });
+  
+    const users = [
+        { name: 'John Doe', photo: 'images/jane.jpg', address: '123 Main St, Cityville', phone: '(123) 456-7890', email: 'john.doe@example.com', qualifications: 'Bachelor of Science in Computer Science', subject1: '95%', subject2: '88%', subject3: '75%', subject4: '92%', subject5: '80%' },
+        { name: 'Jane', photo: 'images/john.jpg', address: '456 Oak St, Townsville', phone: '(456) 789-0123', email: 'jane.smith@example.com', qualifications: 'Master of Business Administration', subject1: '90%', subject2: '85%', subject3: '78%', subject4: '94%', subject5: '88%' },
+        { name: 'Abhishek Angole', photo: 'images/jane.jpg', address: '123 Main St, Cityville', phone: '(123) 456-7890', email: 'john.doe@example.com', qualifications: 'Bachelor of Science in Computer Science', subject1: '95%', subject2: '88%', subject3: '75%', subject4: '92%', subject5: '80%' },
+        { name: 'John Doe', photo: 'images/jane.jpg', address: '123 Main St, Cityville', phone: '(123) 456-7890', email: 'john.doe@example.com', qualifications: 'Bachelor of Science in Computer Science', subject1: '95%', subject2: '88%', subject3: '75%', subject4: '92%', subject5: '80%' },
+        { name: 'Sarang Joshi', photo: 'images/sarangSir.jpg', address: '456 Oak St, Townsville', phone: '(456) 789-0123', email: 'jane.smith@example.com', qualifications: 'Master of Business Administration', subject1: '90%', subject2: '85%', subject3: '78%', subject4: '94%', subject5: '88%' },
+        { name: 'Anup Sir', photo: 'images/anupSir.jpg', address: '123 Main St, Cityville', phone: '(123) 456-7890', email: 'john.doe@example.com', qualifications: 'Bachelor of Science in Computer Science', subject1: '95%', subject2: '88%', subject3: '75%', subject4: '92%', subject5: '80%' },
+        { name: 'John Doe', photo: 'images/jane.jpg', address: '123 Main St, Cityville', phone: '(123) 456-7890', email: 'john.doe@example.com', qualifications: 'Bachelor of Science in Computer Science', subject1: '95%', subject2: '88%', subject3: '75%', subject4: '92%', subject5: '80%' },
+        { name: 'Jane Smith', photo: 'images/john.jpg', address: '456 Oak St, Townsville', phone: '(456) 789-0123', email: 'jane.smith@example.com', qualifications: 'Master of Business Administration', subject1: '90%', subject2: '85%', subject3: '78%', subject4: '94%', subject5: '88%' },
+        { name: 'John Doe', photo: 'images/jane.jpg', address: '123 Main St, Cityville', phone: '(123) 456-7890', email: 'john.doe@example.com', qualifications: 'Bachelor of Science in Computer Science', subject1: '95%', subject2: '88%', subject3: '75%', subject4: '92%', subject5: '80%' },
+        // Add details for other users
+    ];
+
+    function showUserDetails() {
+        const selectedUserIndex = userID-1;
+        const userPhoto = document.getElementById('userPhoto');
+        const userName = document.getElementById('userName');
+        const userAddress = document.getElementById('userAddress');
+        const userPhone = document.getElementById('userPhone');
+        const userEmail = document.getElementById('userEmail');
+        const userQualifications = document.getElementById('userQualifications');
+        const userSubject1 = document.getElementById('userSubject1');
+        const userSubject2 = document.getElementById('userSubject2');
+        const userSubject3 = document.getElementById('userSubject3');
+        const userSubject4 = document.getElementById('userSubject4');
+        const userSubject5 = document.getElementById('userSubject5');
+
+        if (selectedUserIndex !== "-1") {
+            intruder(userID);
+            userPhoto.src = users[selectedUserIndex].photo;
+            userName.textContent = users[selectedUserIndex].name;
+            userAddress.textContent = users[selectedUserIndex].address;
+            userPhone.textContent = users[selectedUserIndex].phone;
+            userEmail.textContent = users[selectedUserIndex].email;
+            userQualifications.textContent = users[selectedUserIndex].qualifications;
+            userSubject1.textContent = users[selectedUserIndex].subject1;
+            userSubject2.textContent = users[selectedUserIndex].subject2;
+            userSubject3.textContent = users[selectedUserIndex].subject3;
+            userSubject4.textContent = users[selectedUserIndex].subject4;
+            userSubject5.textContent = users[selectedUserIndex].subject5;
+        } else {
+            // Reset details if no user is selected
+            userPhoto.src = '';
+            userName.textContent = '';
+            userAddress.textContent = '';
+            userPhone.textContent = '';
+            userEmail.textContent = '';
+            userQualifications.textContent = '';
+            userSubject1.textContent = '';
+            userSubject2.textContent = '';
+            userSubject3.textContent = '';
+            userSubject4.textContent = '';
+            userSubject5.textContent = '';
+        }
+    }
+
+    function intruder(selectedUserIndex){
+            if(selectedUserIndex=="3") document.body.style.backgroundColor = "red";
+            else document.body.style.backgroundColor = "white";
+
+    }
+
+    function onTimerTick() {
+        fetchData()
+            .then(variable1 => {
+                userID = refRFIDTable[variable1];
+                console.log('Value from refRFIDTable:', userID);
+                
+                // Show user details after fetching data
+                showUserDetails();
+            })
+            .catch(error => {
+                // Handle errors here
+                console.error('Error in fetchData:', error);
+            });
+    
+        console.log("timer tick");
+    }
+    
+
+    setInterval(onTimerTick, 1000); // Set interval to 6 Seconds
+</script>
+
+</body>
+</html>

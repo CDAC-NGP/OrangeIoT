@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Using Google APIs in JavaScript</title>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        
+
+        #chart-container {
+            text-align: center;
+        }
+
+        #likes {
+            margin-bottom: 10px;
+        }
+
+       
+    </style>
+</head>
+<body>
+   
+    <div id="chart-container">
+
+        <img src="SP_ACTS_Logo.jpg" alt="Soft Polynomials Logo" height="75">
+        <!-- <h1>Welcome to CDAC ATC Soft Polynomials Nagpur</h1> -->
+        <h1>Project YouLike </h1>
+        <canvas id="myPieChart" width="400" height="400"></canvas>
+        <h2 id="video-title">Video Title: Loading...</h2>
+        <h3 id="likes">Likes: Loading...</h3>
+    </div>
+
+<script>
+    const videoId = 'w82a1FT5o88';
+    const apiKey = 'AIzaSyDDdGyj0D6ZUhk9rHTv6JvySF3MIL-BeQg'; //AIzaSyDDdGyj0D6ZUhk9rHTv6JvySF3MIL-BeQg
+    var targetCount = 179480;
+    var myPieChart; // Variable to store the chart instance
+
+    function init() {
+        gapi.load('client', function () {
+            gapi.client.init({
+                apiKey: apiKey,
+                discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest'],
+            }).then(function () {
+                // Call your function to make YouTube API requests here
+                getVideoLikes(videoId);
+                getVideoTitle(videoId);
+            });
+        });
+    }
+
+    function getVideoLikes(videoId) {
+        gapi.client.youtube.videos.list({
+            part: 'snippet,statistics',
+            id: videoId,
+        }).then(function (response) {
+            const likesCount = response.result.items[0].statistics.likeCount;
+            console.log(`The video has ${likesCount} likes.`);
+            
+            // Update the likes count in the HTML
+            document.getElementById('likes').textContent = `Likes: ${likesCount}`;
+            useLikesCount(likesCount);
+        }, function (error) {
+            console.error('Error:', error.result.error.message);
+        });
+    }
+
+    function getVideoTitle(videoId) {
+        gapi.client.youtube.videos.list({
+            part: 'snippet',
+            id: videoId,
+        }).then(function (response) {
+            const videoTitle = response.result.items[0].snippet.title;
+            console.log(`Video Title: ${videoTitle}`);
+            document.getElementById('video-title').textContent = `Video Title: ${videoTitle}`;
+        }, function (error) {
+            console.error('Error:', error.result.error.message);
+        });
+    }
+
+    function useLikesCount(likesCount) {
+        if (likesCount >= targetCount) {
+            const url = 'http://192.168.48.245:5000/actData?id=o101&s1=Done&s2=132&do1=1&do2=1'; //https://angolepython.pythonanywhere.com/
+            //const url = 'https://angolepython.pythonanywhere.com/actData?id=o101&s1=Done&s2=132&do1=1&do2=1';
+            fetch(url);
+            document.getElementById('likes').textContent = `Likes: ${likesCount} :: Target Reached! Let's Light Up!!`;
+            console.log("Timer is in 1");
+        }
+
+        if (likesCount < targetCount) {
+            const url = 'http://192.168.48.245:5000/actData?id=o101&s1=0&s2=132&do1=0&do2=1';
+            fetch(url);
+            document.getElementById('likes').textContent = `Likes: ${likesCount} :: Target Likes: ${targetCount}`;
+            console.log("Timer is in 0");
+        }        
+
+        updatePieChart(likesCount);
+    }
+
+    function updatePieChart(likesCount) {
+        var data = {
+            labels: ["Likes", "Remaining"],
+            datasets: [
+                {
+                    data: [likesCount, targetCount - likesCount],
+                    backgroundColor: ["blue", "cyan"],
+                },
+            ],
+        };
+
+        if (myPieChart) {
+            // If chart instance exists, update its data
+            myPieChart.data = data;
+            myPieChart.update();
+        } else {
+            // If chart instance doesn't exist, create a new chart
+            var ctx = document.getElementById("myPieChart").getContext("2d");
+            myPieChart = new Chart(ctx, {
+                type: "pie",
+                data: data,
+                options: {
+                    responsive: false,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+    }
+
+    function onTimerTick() {
+        // Call your function here that you want to run every 6 Seconds
+        init();
+    }
+
+    // Load the client and make API calls
+    init();
+    setInterval(onTimerTick, 6000); // Set interval to 6 Seconds
+</script>
+
+<script src="https://apis.google.com/js/client.js?onload=init"></script>
+</body>
+</html>
